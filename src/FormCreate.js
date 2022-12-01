@@ -4,9 +4,9 @@ import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import {nanoid} from "nanoid";
 
-function FormArea({addNote}) {
-  const [noteText, setNoteText] = useState("");
-  const [noteTitle, setNoteTitle] = useState("");
+function FormArea({addNote, note, updateNote}) {
+  const [noteText, setNoteText] = useState(note.noteText);
+  const [noteTitle, setNoteTitle] = useState(note.title);
 
   const handleTextChange = (e) => {
     setNoteText(e.target.value);
@@ -14,6 +14,20 @@ function FormArea({addNote}) {
   const handleTitleChange = (e) => {
     setNoteTitle(e.target.value);
   };
+
+  function nth(d) {
+    if (d > 3 && d < 21) return "th";
+    switch (d % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,19 +42,6 @@ function FormArea({addNote}) {
     };
 
     let day = date.getDate();
-    function nth(d) {
-      if (d > 3 && d < 21) return "th";
-      switch (d % 10) {
-        case 1:
-          return "st";
-        case 2:
-          return "nd";
-        case 3:
-          return "rd";
-        default:
-          return "th";
-      }
-    }
 
     const dateToday = date.toLocaleDateString("en-US", optionsForDate);
     const dateTime = date.toLocaleTimeString("en-US", options);
@@ -53,12 +54,40 @@ function FormArea({addNote}) {
       id: nanoid(),
       title: noteTitle,
     });
-    setNoteText("")
-    setNoteTitle("")
+    setNoteText("");
+    setNoteTitle("");
+  };
+  const handleSubmitOfNote = (e) => {
+    e.preventDefault();
+    const date = new Date();
+    const options = {
+      hour: "numeric",
+      minute: "numeric",
+    };
+    const optionsForDate = {
+      month: "short",
+      day: "numeric",
+    };
+
+    let day = date.getDate();
+
+    const dateToday = date.toLocaleDateString("en-US", optionsForDate);
+    const dateTime = date.toLocaleTimeString("en-US", options);
+    updateNote({
+      noteText,
+      newSuffix: nth(day),
+      newTime: dateToday,
+      newDate: dateTime,
+      id: note.id,
+      title: noteTitle,
+    });
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="d-flex flex-column">
+    <Form
+      onSubmit={!note.noteText ? handleSubmit : handleSubmitOfNote}
+      className="d-flex flex-column"
+    >
       <Form.Group className="mb-3">
         <Form.Control
           className="text-center"
@@ -80,10 +109,9 @@ function FormArea({addNote}) {
         />
       </FloatingLabel>
       <Button variant="primary" type="submit">
-        Add
+        {!note.noteText ? "Add" : "Save Changes"}
       </Button>
     </Form>
   );
 }
-
 export default FormArea;
