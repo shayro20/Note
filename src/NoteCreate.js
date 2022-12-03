@@ -44,7 +44,7 @@ function NoteCreate({note, deleteNote, updateNote}) {
                 controlId="exampleForm.ControlInput1"
               ></Form.Group>
             </Form>
-            <FormCreate note={note} updateNote={updateNote} />
+            <FormCreate note={note} updateNote={updateNote} handleClose={handleClose} />
           </Modal.Body>
           <Modal.Footer></Modal.Footer>
         </Modal>

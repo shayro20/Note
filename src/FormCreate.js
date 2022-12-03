@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import {nanoid} from "nanoid";
 
-function FormArea({addNote, note, updateNote}) {
+function FormArea({addNote, note, updateNote, handleClose}) {
   const [noteText, setNoteText] = useState(note.noteText);
   const [noteTitle, setNoteTitle] = useState(note.title);
 
@@ -81,6 +81,7 @@ function FormArea({addNote, note, updateNote}) {
       id: note.id,
       title: noteTitle,
     });
+    handleClose();
   };
 
   return (
